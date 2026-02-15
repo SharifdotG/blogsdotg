@@ -1,6 +1,7 @@
 "use client";
 
 import { useEditor, EditorContent } from "@tiptap/react";
+import { Extension, type Editor as TiptapEditorInstance } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import TiptapLink from "@tiptap/extension-link";
@@ -142,9 +143,67 @@ function ToolbarButton({
 interface DropdownItem {
     label: string;
     icon?: React.ReactNode;
+    shortcut?: string;
     action: () => void;
     isActive?: boolean;
 }
+
+function promptForLink(editor: TiptapEditorInstance): boolean {
+    const previousUrl = editor.getAttributes("link").href;
+    const url = window.prompt("Enter URL:", previousUrl);
+    if (url === null) {
+        return true;
+    }
+
+    if (url === "") {
+        editor.chain().focus().extendMarkRange("link").unsetLink().run();
+        return true;
+    }
+
+    editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
+    return true;
+}
+
+function promptForImage(editor: TiptapEditorInstance): boolean {
+    const url = window.prompt("Enter image URL:");
+    if (!url) {
+        return true;
+    }
+
+    editor.chain().focus().setImage({ src: url }).run();
+    return true;
+}
+
+const CommonShortcuts = Extension.create({
+    name: "commonShortcuts",
+
+    addKeyboardShortcuts() {
+        return {
+            "Mod-k": () => promptForLink(this.editor),
+            "Mod-Shift-i": () => promptForImage(this.editor),
+            "Mod-Alt-0": () => this.editor.chain().focus().setParagraph().run(),
+            "Mod-Alt-1": () =>
+                this.editor.chain().focus().toggleHeading({ level: 1 }).run(),
+            "Mod-Alt-2": () =>
+                this.editor.chain().focus().toggleHeading({ level: 2 }).run(),
+            "Mod-Alt-3": () =>
+                this.editor.chain().focus().toggleHeading({ level: 3 }).run(),
+            "Mod-Alt-4": () =>
+                this.editor.chain().focus().toggleHeading({ level: 4 }).run(),
+            "Mod-Alt-c": () => this.editor.chain().focus().toggleCodeBlock().run(),
+            "Mod-Alt-h": () =>
+                this.editor.chain().focus().setHorizontalRule().run(),
+            "Mod-Shift-l": () =>
+                this.editor.chain().focus().setTextAlign("left").run(),
+            "Mod-Shift-e": () =>
+                this.editor.chain().focus().setTextAlign("center").run(),
+            "Mod-Shift-r": () =>
+                this.editor.chain().focus().setTextAlign("right").run(),
+            "Mod-Shift-j": () =>
+                this.editor.chain().focus().setTextAlign("justify").run(),
+        };
+    },
+});
 
 function ToolbarDropdown({
     label,
@@ -215,8 +274,15 @@ function ToolbarDropdown({
                                     : "text-muted-foreground hover:text-foreground hover:bg-ctp-surface0",
                             )}
                         >
-                            {item.icon}
-                            {item.label}
+                            <span className="flex items-center gap-2 min-w-0">
+                                {item.icon}
+                                <span className="truncate">{item.label}</span>
+                            </span>
+                            {item.shortcut ? (
+                                <span className="ml-auto pl-2 text-[10px] text-muted-foreground">
+                                    {item.shortcut}
+                                </span>
+                            ) : null}
                         </button>
                     ))}
                 </div>
@@ -282,6 +348,7 @@ export function TiptapEditor({
             TaskItem.configure({
                 nested: true,
             }),
+            CommonShortcuts,
         ],
         content,
         editorProps: {
@@ -304,27 +371,12 @@ export function TiptapEditor({
 
     const setLink = useCallback(() => {
         if (!editor) return;
-        const previousUrl = editor.getAttributes("link").href;
-        const url = window.prompt("Enter URL:", previousUrl);
-        if (url === null) return;
-        if (url === "") {
-            editor.chain().focus().extendMarkRange("link").unsetLink().run();
-            return;
-        }
-        editor
-            .chain()
-            .focus()
-            .extendMarkRange("link")
-            .setLink({ href: url })
-            .run();
+        promptForLink(editor);
     }, [editor]);
 
     const addImage = useCallback(() => {
         if (!editor) return;
-        const url = window.prompt("Enter image URL:");
-        if (url) {
-            editor.chain().focus().setImage({ src: url }).run();
-        }
+        promptForImage(editor);
     }, [editor]);
 
     if (!editor) {
@@ -356,6 +408,7 @@ export function TiptapEditor({
         {
             label: "Paragraph",
             icon: <Pilcrow className="h-3.5 w-3.5" />,
+            shortcut: "Ctrl/Cmd+Alt+0",
             action: () => editor.chain().focus().setParagraph().run(),
             isActive:
                 editor.isActive("paragraph") && !editor.isActive("heading"),
@@ -363,6 +416,7 @@ export function TiptapEditor({
         {
             label: "Heading 1",
             icon: <Heading1 className="h-3.5 w-3.5" />,
+            shortcut: "Ctrl/Cmd+Alt+1",
             action: () =>
                 editor.chain().focus().toggleHeading({ level: 1 }).run(),
             isActive: editor.isActive("heading", { level: 1 }),
@@ -370,6 +424,7 @@ export function TiptapEditor({
         {
             label: "Heading 2",
             icon: <Heading2 className="h-3.5 w-3.5" />,
+            shortcut: "Ctrl/Cmd+Alt+2",
             action: () =>
                 editor.chain().focus().toggleHeading({ level: 2 }).run(),
             isActive: editor.isActive("heading", { level: 2 }),
@@ -377,6 +432,7 @@ export function TiptapEditor({
         {
             label: "Heading 3",
             icon: <Heading3 className="h-3.5 w-3.5" />,
+            shortcut: "Ctrl/Cmd+Alt+3",
             action: () =>
                 editor.chain().focus().toggleHeading({ level: 3 }).run(),
             isActive: editor.isActive("heading", { level: 3 }),
@@ -384,6 +440,7 @@ export function TiptapEditor({
         {
             label: "Heading 4",
             icon: <Heading4 className="h-3.5 w-3.5" />,
+            shortcut: "Ctrl/Cmd+Alt+4",
             action: () =>
                 editor.chain().focus().toggleHeading({ level: 4 }).run(),
             isActive: editor.isActive("heading", { level: 4 }),
@@ -394,18 +451,21 @@ export function TiptapEditor({
         {
             label: "Bullet List",
             icon: <List className="h-3.5 w-3.5" />,
+            shortcut: "Ctrl/Cmd+Shift+8",
             action: () => editor.chain().focus().toggleBulletList().run(),
             isActive: editor.isActive("bulletList"),
         },
         {
             label: "Ordered List",
             icon: <ListOrdered className="h-3.5 w-3.5" />,
+            shortcut: "Ctrl/Cmd+Shift+7",
             action: () => editor.chain().focus().toggleOrderedList().run(),
             isActive: editor.isActive("orderedList"),
         },
         {
             label: "Task List",
             icon: <ListTodo className="h-3.5 w-3.5" />,
+            shortcut: "Ctrl/Cmd+Shift+9",
             action: () => editor.chain().focus().toggleTaskList().run(),
             isActive: editor.isActive("taskList"),
         },
@@ -415,24 +475,28 @@ export function TiptapEditor({
         {
             label: "Align Left",
             icon: <AlignLeft className="h-3.5 w-3.5" />,
+            shortcut: "Ctrl/Cmd+Shift+L",
             action: () => editor.chain().focus().setTextAlign("left").run(),
             isActive: editor.isActive({ textAlign: "left" }),
         },
         {
             label: "Align Center",
             icon: <AlignCenter className="h-3.5 w-3.5" />,
+            shortcut: "Ctrl/Cmd+Shift+E",
             action: () => editor.chain().focus().setTextAlign("center").run(),
             isActive: editor.isActive({ textAlign: "center" }),
         },
         {
             label: "Align Right",
             icon: <AlignRight className="h-3.5 w-3.5" />,
+            shortcut: "Ctrl/Cmd+Shift+R",
             action: () => editor.chain().focus().setTextAlign("right").run(),
             isActive: editor.isActive({ textAlign: "right" }),
         },
         {
             label: "Justify",
             icon: <AlignJustify className="h-3.5 w-3.5" />,
+            shortcut: "Ctrl/Cmd+Shift+J",
             action: () => editor.chain().focus().setTextAlign("justify").run(),
             isActive: editor.isActive({ textAlign: "justify" }),
         },
@@ -450,9 +514,9 @@ export function TiptapEditor({
 
     return (
         <TooltipProvider delayDuration={300}>
-            <div className="border border-border/50 rounded-lg overflow-hidden bg-ctp-surface0">
+            <div className="relative border border-border/50 rounded-lg bg-ctp-surface0">
                 {/* Toolbar */}
-                <div className="flex flex-wrap items-center gap-0.5 p-2 border-b border-border/50 bg-ctp-mantle/50">
+                <div className="sticky top-0 z-20 flex flex-wrap items-center gap-0.5 p-2 border-b border-border/50 bg-ctp-mantle/90 backdrop-blur supports-backdrop-filter:bg-ctp-mantle/80">
                     {/* Heading dropdown */}
                     <ToolbarDropdown
                         label="Heading"
@@ -496,7 +560,7 @@ export function TiptapEditor({
                             editor.chain().focus().toggleStrike().run()
                         }
                         isActive={editor.isActive("strike")}
-                        tooltip="Strikethrough"
+                        tooltip="Strikethrough (Ctrl/Cmd+Shift+S)"
                     >
                         <Strikethrough className="h-4 w-4" />
                     </ToolbarButton>
@@ -505,7 +569,7 @@ export function TiptapEditor({
                             editor.chain().focus().toggleCode().run()
                         }
                         isActive={editor.isActive("code")}
-                        tooltip="Inline Code"
+                        tooltip="Inline Code (Ctrl/Cmd+E)"
                     >
                         <Code className="h-4 w-4" />
                     </ToolbarButton>
@@ -514,7 +578,7 @@ export function TiptapEditor({
                             editor.chain().focus().toggleHighlight().run()
                         }
                         isActive={editor.isActive("highlight")}
-                        tooltip="Highlight"
+                        tooltip="Highlight (Ctrl/Cmd+Shift+H)"
                     >
                         <Highlighter className="h-4 w-4" />
                     </ToolbarButton>
@@ -527,7 +591,7 @@ export function TiptapEditor({
                             editor.chain().focus().toggleSuperscript().run()
                         }
                         isActive={editor.isActive("superscript")}
-                        tooltip="Superscript"
+                        tooltip="Superscript (Ctrl/Cmd+.)"
                     >
                         <SuperscriptIcon className="h-4 w-4" />
                     </ToolbarButton>
@@ -536,7 +600,7 @@ export function TiptapEditor({
                             editor.chain().focus().toggleSubscript().run()
                         }
                         isActive={editor.isActive("subscript")}
-                        tooltip="Subscript"
+                        tooltip="Subscript (Ctrl/Cmd+,)"
                     >
                         <SubscriptIcon className="h-4 w-4" />
                     </ToolbarButton>
@@ -566,7 +630,7 @@ export function TiptapEditor({
                             editor.chain().focus().toggleBlockquote().run()
                         }
                         isActive={editor.isActive("blockquote")}
-                        tooltip="Blockquote"
+                        tooltip="Blockquote (Ctrl/Cmd+Shift+B)"
                     >
                         <Quote className="h-4 w-4" />
                     </ToolbarButton>
@@ -575,7 +639,7 @@ export function TiptapEditor({
                             editor.chain().focus().toggleCodeBlock().run()
                         }
                         isActive={editor.isActive("codeBlock")}
-                        tooltip="Code Block"
+                        tooltip="Code Block (Ctrl/Cmd+Alt+C)"
                     >
                         <Code2 className="h-4 w-4" />
                     </ToolbarButton>
@@ -583,7 +647,7 @@ export function TiptapEditor({
                         onClick={() =>
                             editor.chain().focus().setHorizontalRule().run()
                         }
-                        tooltip="Horizontal Rule"
+                        tooltip="Horizontal Rule (Ctrl/Cmd+Alt+H)"
                     >
                         <Minus className="h-4 w-4" />
                     </ToolbarButton>
@@ -594,11 +658,14 @@ export function TiptapEditor({
                     <ToolbarButton
                         onClick={setLink}
                         isActive={editor.isActive("link")}
-                        tooltip="Add Link"
+                        tooltip="Add Link (Ctrl/Cmd+K)"
                     >
                         <LinkIcon className="h-4 w-4" />
                     </ToolbarButton>
-                    <ToolbarButton onClick={addImage} tooltip="Add Image">
+                    <ToolbarButton
+                        onClick={addImage}
+                        tooltip="Add Image (Ctrl/Cmd+Shift+I)"
+                    >
                         <ImageIcon className="h-4 w-4" />
                     </ToolbarButton>
 

@@ -14,15 +14,18 @@ export async function requireAdmin(ctx: AdminCtx) {
         throw new ConvexError("Not authenticated");
     }
 
-    if (!configuredAdminEmail) {
-        throw new ConvexError("Admin email is not configured");
-    }
-
     const user = await ctx.db.get(userId);
     const userEmail =
         typeof user?.email === "string" ? user.email.trim().toLowerCase() : "";
 
-    if (!userEmail || userEmail !== configuredAdminEmail) {
-        throw new ConvexError("Not authorized");
+    if (configuredAdminEmail && userEmail && userEmail === configuredAdminEmail) {
+        return;
     }
+
+    const users = await ctx.db.query("users").take(2);
+    if (users.length === 1 && users[0]?._id === userId) {
+        return;
+    }
+
+    throw new ConvexError("Not authorized");
 }

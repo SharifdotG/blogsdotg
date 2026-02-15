@@ -2,7 +2,6 @@ import { convexAuth } from "@convex-dev/auth/server";
 import { Password } from "@convex-dev/auth/providers/Password";
 import { ConvexError } from "convex/values";
 
-const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
 const adminBootstrapSecret = process.env.ADMIN_BOOTSTRAP_SECRET?.trim();
 const isAdminBootstrapEnabled =
     process.env.ADMIN_BOOTSTRAP_ENABLED?.trim().toLowerCase() === "true";
@@ -19,11 +18,6 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
     providers: [
         Password({
             profile(params) {
-                const configuredAdminEmail = adminEmail;
-                if (!configuredAdminEmail) {
-                    throw new ConvexError("Admin email is not configured.");
-                }
-
                 const emailValue = getStringParam(params, "email");
                 if (!emailValue) {
                     throw new ConvexError("Email is required.");
@@ -32,10 +26,6 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
                 const normalizedEmail = emailValue.toLowerCase().trim();
                 if (!normalizedEmail) {
                     throw new ConvexError("Email is required.");
-                }
-
-                if (normalizedEmail !== configuredAdminEmail) {
-                    throw new ConvexError("Unauthorized account.");
                 }
 
                 const flow = getStringParam(params, "flow");
