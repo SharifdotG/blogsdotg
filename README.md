@@ -62,6 +62,49 @@ node generateKeys.mjs
 
 Copy the printed `JWT_PRIVATE_KEY` and `JWKS` values.
 
+1) **Create `ADMIN_BOOTSTRAP_SECRET` (one-time)**
+
+Generate a secure one-time token and store it in your local `.env.local`, Convex, and Vercel environment variables. Examples (pick one):
+
+- Node (cross-platform):
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+- PowerShell (Windows):
+
+```powershell
+$b=New-Object byte[] 32; (New-Object System.Security.Cryptography.RNGCryptoServiceProvider).GetBytes($b); [System.BitConverter]::ToString($b).Replace('-','').ToLower()
+```
+
+- OpenSSL (macOS / Linux):
+
+```bash
+openssl rand -hex 32
+```
+
+- Python:
+
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
+Add the generated value to your `.env.local` (and the same value in Convex/Vercel):
+
+```bash
+ADMIN_BOOTSTRAP_SECRET=your-generated-secret
+ADMIN_BOOTSTRAP_ENABLED=true
+```
+
+Visit the bootstrap page to create the first admin:
+
+```text
+http://localhost:3000/admin/bootstrap?token=your-generated-secret
+```
+
+Important: after creating the admin, set `ADMIN_BOOTSTRAP_ENABLED=false` in `.env.local`, Convex, and Vercel and restart/redeploy. Treat `ADMIN_BOOTSTRAP_SECRET` as sensitive — do not commit it to source control.
+
 1) **Set Convex environment variables**
 
 Set these in your Convex deployment (Dashboard > Settings > Environment Variables):
