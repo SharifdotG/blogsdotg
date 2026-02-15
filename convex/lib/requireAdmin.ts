@@ -18,7 +18,11 @@ export async function requireAdmin(ctx: AdminCtx) {
     const userEmail =
         typeof user?.email === "string" ? user.email.trim().toLowerCase() : "";
 
-    if (configuredAdminEmail && userEmail && userEmail === configuredAdminEmail) {
+    if (
+        configuredAdminEmail &&
+        userEmail &&
+        userEmail === configuredAdminEmail
+    ) {
         return;
     }
 

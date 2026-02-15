@@ -190,7 +190,8 @@ const CommonShortcuts = Extension.create({
                 this.editor.chain().focus().toggleHeading({ level: 3 }).run(),
             "Mod-Alt-4": () =>
                 this.editor.chain().focus().toggleHeading({ level: 4 }).run(),
-            "Mod-Alt-c": () => this.editor.chain().focus().toggleCodeBlock().run(),
+            "Mod-Alt-c": () =>
+                this.editor.chain().focus().toggleCodeBlock().run(),
             "Mod-Alt-h": () =>
                 this.editor.chain().focus().setHorizontalRule().run(),
             "Mod-Shift-l": () =>
