@@ -1,26 +1,463 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
+@custom-variant dark (&:is(.dark *));
+
+/* ===== Catppuccin Latte (Light Theme) ===== */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+    /* Catppuccin Latte Palette */
+    --ctp-rosewater: #dc8a78;
+    --ctp-flamingo: #dd7878;
+    --ctp-pink: #ea76cb;
+    --ctp-mauve: #8839ef;
+    --ctp-red: #d20f39;
+    --ctp-maroon: #e64553;
+    --ctp-peach: #fe640b;
+    --ctp-yellow: #df8e1d;
+    --ctp-green: #40a02b;
+    --ctp-teal: #179299;
+    --ctp-sky: #04a5e5;
+    --ctp-sapphire: #209fb5;
+    --ctp-blue: #1e66f5;
+    --ctp-lavender: #7287fd;
+    --ctp-text: #4c4f69;
+    --ctp-subtext1: #5c5f77;
+    --ctp-subtext0: #6c6f85;
+    --ctp-overlay2: #7c7f93;
+    --ctp-overlay1: #8c8fa1;
+    --ctp-overlay0: #9ca0b0;
+    --ctp-surface2: #acb0be;
+    --ctp-surface1: #bcc0cc;
+    --ctp-surface0: #ccd0da;
+    --ctp-base: #eff1f5;
+    --ctp-mantle: #e6e9ef;
+    --ctp-crust: #dce0e8;
+
+    /* shadcn/ui variable mapping → Catppuccin Latte */
+    --radius: 0.625rem;
+    --background: #eff1f5;
+    --foreground: #4c4f69;
+    --card: #e6e9ef;
+    --card-foreground: #4c4f69;
+    --popover: #e6e9ef;
+    --popover-foreground: #4c4f69;
+    --primary: #8839ef;
+    --primary-foreground: #eff1f5;
+    --secondary: #ccd0da;
+    --secondary-foreground: #4c4f69;
+    --muted: #bcc0cc;
+    --muted-foreground: #8c8fa1;
+    --accent: #1e66f5;
+    --accent-foreground: #eff1f5;
+    --destructive: #d20f39;
+    --border: #acb0be;
+    --input: #acb0be;
+    --ring: #7287fd;
+    --chart-1: #8839ef;
+    --chart-2: #1e66f5;
+    --chart-3: #40a02b;
+    --chart-4: #df8e1d;
+    --chart-5: #d20f39;
+    --sidebar: #e6e9ef;
+    --sidebar-foreground: #4c4f69;
+    --sidebar-primary: #8839ef;
+    --sidebar-primary-foreground: #eff1f5;
+    --sidebar-accent: #ccd0da;
+    --sidebar-accent-foreground: #4c4f69;
+    --sidebar-border: #acb0be;
+    --sidebar-ring: #7287fd;
+}
+
+/* ===== Catppuccin Mocha (Dark Theme) ===== */
+.dark {
+    /* Catppuccin Mocha Palette */
+    --ctp-rosewater: #f5e0dc;
+    --ctp-flamingo: #f2cdcd;
+    --ctp-pink: #f5c2e7;
+    --ctp-mauve: #cba6f7;
+    --ctp-red: #f38ba8;
+    --ctp-maroon: #eba0ac;
+    --ctp-peach: #fab387;
+    --ctp-yellow: #f9e2af;
+    --ctp-green: #a6e3a1;
+    --ctp-teal: #94e2d5;
+    --ctp-sky: #89dceb;
+    --ctp-sapphire: #74c7ec;
+    --ctp-blue: #89b4fa;
+    --ctp-lavender: #b4befe;
+    --ctp-text: #cdd6f4;
+    --ctp-subtext1: #bac2de;
+    --ctp-subtext0: #a6adc8;
+    --ctp-overlay2: #9399b2;
+    --ctp-overlay1: #7f849c;
+    --ctp-overlay0: #6c7086;
+    --ctp-surface2: #585b70;
+    --ctp-surface1: #45475a;
+    --ctp-surface0: #313244;
+    --ctp-base: #1e1e2e;
+    --ctp-mantle: #181825;
+    --ctp-crust: #11111b;
+
+    /* shadcn/ui variable mapping → Catppuccin Mocha */
+    --background: #1e1e2e;
+    --foreground: #cdd6f4;
+    --card: #181825;
+    --card-foreground: #cdd6f4;
+    --popover: #181825;
+    --popover-foreground: #cdd6f4;
+    --primary: #cba6f7;
+    --primary-foreground: #1e1e2e;
+    --secondary: #313244;
+    --secondary-foreground: #cdd6f4;
+    --muted: #45475a;
+    --muted-foreground: #7f849c;
+    --accent: #89b4fa;
+    --accent-foreground: #1e1e2e;
+    --destructive: #f38ba8;
+    --border: #585b70;
+    --input: #585b70;
+    --ring: #b4befe;
+    --chart-1: #cba6f7;
+    --chart-2: #89b4fa;
+    --chart-3: #a6e3a1;
+    --chart-4: #f9e2af;
+    --chart-5: #f38ba8;
+    --sidebar: #181825;
+    --sidebar-foreground: #cdd6f4;
+    --sidebar-primary: #cba6f7;
+    --sidebar-primary-foreground: #1e1e2e;
+    --sidebar-accent: #313244;
+    --sidebar-accent-foreground: #cdd6f4;
+    --sidebar-border: #585b70;
+    --sidebar-ring: #b4befe;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-heading: var(--font-bricolage);
+    --font-body: var(--font-dm-sans);
+    --font-code: var(--font-cascadia);
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar: var(--sidebar);
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+    --radius-2xl: calc(var(--radius) + 8px);
+    --radius-3xl: calc(var(--radius) + 12px);
+    --radius-4xl: calc(var(--radius) + 16px);
+
+    /* Catppuccin accent colors for direct use in Tailwind */
+    --color-ctp-rosewater: var(--ctp-rosewater);
+    --color-ctp-flamingo: var(--ctp-flamingo);
+    --color-ctp-pink: var(--ctp-pink);
+    --color-ctp-mauve: var(--ctp-mauve);
+    --color-ctp-red: var(--ctp-red);
+    --color-ctp-maroon: var(--ctp-maroon);
+    --color-ctp-peach: var(--ctp-peach);
+    --color-ctp-yellow: var(--ctp-yellow);
+    --color-ctp-green: var(--ctp-green);
+    --color-ctp-teal: var(--ctp-teal);
+    --color-ctp-sky: var(--ctp-sky);
+    --color-ctp-sapphire: var(--ctp-sapphire);
+    --color-ctp-blue: var(--ctp-blue);
+    --color-ctp-lavender: var(--ctp-lavender);
+    --color-ctp-text: var(--ctp-text);
+    --color-ctp-subtext1: var(--ctp-subtext1);
+    --color-ctp-subtext0: var(--ctp-subtext0);
+    --color-ctp-overlay2: var(--ctp-overlay2);
+    --color-ctp-overlay1: var(--ctp-overlay1);
+    --color-ctp-overlay0: var(--ctp-overlay0);
+    --color-ctp-surface2: var(--ctp-surface2);
+    --color-ctp-surface1: var(--ctp-surface1);
+    --color-ctp-surface0: var(--ctp-surface0);
+    --color-ctp-base: var(--ctp-base);
+    --color-ctp-mantle: var(--ctp-mantle);
+    --color-ctp-crust: var(--ctp-crust);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+    body {
+        @apply bg-background text-foreground font-body;
+    }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-heading;
+    }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--ctp-mantle);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--ctp-surface2);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--ctp-overlay0);
+}
+
+/* Blog content styles */
+.blog-content {
+    @apply leading-relaxed;
+}
+.blog-content h1 {
+    @apply text-3xl font-heading font-bold mt-10 mb-5;
+}
+.blog-content h2 {
+    @apply text-2xl font-heading font-bold mt-8 mb-4;
+}
+.blog-content h3 {
+    @apply text-xl font-heading font-semibold mt-6 mb-3;
+}
+.blog-content p {
+    @apply mb-4 text-foreground/90;
+}
+.blog-content a {
+    @apply text-ctp-blue underline underline-offset-2 hover:text-ctp-sapphire transition-colors;
+}
+.blog-content strong {
+    @apply font-bold text-foreground;
+}
+.blog-content em {
+    @apply italic;
+}
+.blog-content u {
+    @apply underline underline-offset-2;
+}
+.blog-content s {
+    @apply line-through text-muted-foreground;
+}
+.blog-content ul,
+.blog-content ol {
+    @apply mb-4 pl-6;
+}
+.blog-content li {
+    @apply mb-1;
+}
+.blog-content ul li {
+    @apply list-disc;
+}
+.blog-content ol li {
+    @apply list-decimal;
+}
+.blog-content li p {
+    @apply mb-1;
+}
+.blog-content blockquote {
+    @apply border-l-4 border-ctp-mauve pl-4 italic text-muted-foreground my-4;
+}
+.blog-content blockquote p {
+    @apply mb-0;
+}
+.blog-content pre {
+    @apply bg-ctp-mantle rounded-lg p-4 overflow-x-auto my-4 font-code text-sm;
+}
+.blog-content code {
+    @apply bg-ctp-surface0 px-1.5 py-0.5 rounded text-sm text-ctp-peach font-code;
+    font-feature-settings:
+        "calt" 1,
+        "ss01" 1;
+    font-variant-ligatures: contextual;
+}
+.blog-content pre code {
+    @apply bg-transparent p-0 text-foreground font-code text-sm;
+    font-feature-settings:
+        "calt" 1,
+        "ss01" 1;
+    font-variant-ligatures: contextual;
+}
+.blog-content .code-block-shell {
+    @apply my-4 overflow-hidden rounded-lg border border-border/60 bg-ctp-mantle;
+}
+.blog-content .code-block-toolbar {
+    @apply flex items-center justify-between gap-3 px-3 py-2 border-b border-border/50 bg-ctp-surface0/35;
+}
+.blog-content .code-block-language {
+    @apply text-[11px] font-semibold uppercase tracking-wide text-ctp-subtext0;
+}
+.blog-content .code-block-copy {
+    @apply text-xs font-medium rounded-md border border-border/60 px-2.5 py-1 text-muted-foreground hover:text-foreground hover:bg-ctp-surface0/70 transition-colors;
+}
+.blog-content .code-block-shell pre {
+    @apply my-0 rounded-none bg-transparent;
+}
+.blog-content img {
+    @apply rounded-lg my-4 max-w-full;
+}
+.blog-content hr {
+    @apply border-border my-8;
+}
+
+/* Tiptap editor styles */
+.tiptap {
+    @apply outline-none min-h-75 p-4;
+}
+.tiptap code,
+.tiptap pre,
+.font-code {
+    font-feature-settings:
+        "calt" 1,
+        "ss01" 1;
+    font-variant-ligatures: contextual;
+}
+.tiptap p.is-editor-empty:first-child::before {
+    @apply text-muted-foreground float-left h-0 pointer-events-none;
+    content: attr(data-placeholder);
+}
+
+/* Syntax highlighting for code blocks */
+.tiptap .hljs-comment,
+.tiptap .hljs-quote {
+    color: var(--ctp-overlay0);
+    font-style: italic;
+}
+.tiptap .hljs-keyword,
+.tiptap .hljs-selector-tag,
+.tiptap .hljs-addition {
+    color: var(--ctp-mauve);
+}
+.tiptap .hljs-string,
+.tiptap .hljs-doctag {
+    color: var(--ctp-green);
+}
+.tiptap .hljs-number,
+.tiptap .hljs-literal {
+    color: var(--ctp-peach);
+}
+.tiptap .hljs-title,
+.tiptap .hljs-section {
+    color: var(--ctp-yellow);
+}
+.tiptap .hljs-built_in,
+.tiptap .hljs-type {
+    color: var(--ctp-blue);
+}
+.tiptap .hljs-name,
+.tiptap .hljs-selector-id,
+.tiptap .hljs-selector-class {
+    color: var(--ctp-teal);
+}
+.tiptap .hljs-attr,
+.tiptap .hljs-attribute {
+    color: var(--ctp-sky);
+}
+.tiptap .hljs-variable,
+.tiptap .hljs-template-variable {
+    color: var(--ctp-red);
+}
+.tiptap .hljs-regexp {
+    color: var(--ctp-pink);
+}
+.tiptap .hljs-symbol,
+.tiptap .hljs-bullet {
+    color: var(--ctp-flamingo);
+}
+.tiptap .hljs-meta {
+    color: var(--ctp-sapphire);
+}
+.tiptap .hljs-deletion {
+    color: var(--ctp-red);
+}
+
+/* Blog post code block syntax highlighting */
+.blog-content .hljs-comment,
+.blog-content .hljs-quote {
+    color: var(--ctp-overlay0);
+    font-style: italic;
+}
+.blog-content .hljs-keyword,
+.blog-content .hljs-selector-tag {
+    color: var(--ctp-mauve);
+}
+.blog-content .hljs-string,
+.blog-content .hljs-doctag {
+    color: var(--ctp-green);
+}
+.blog-content .hljs-number,
+.blog-content .hljs-literal {
+    color: var(--ctp-peach);
+}
+.blog-content .hljs-title,
+.blog-content .hljs-section {
+    color: var(--ctp-yellow);
+}
+.blog-content .hljs-built_in,
+.blog-content .hljs-type {
+    color: var(--ctp-blue);
+}
+.blog-content .hljs-name,
+.blog-content .hljs-selector-id,
+.blog-content .hljs-selector-class {
+    color: var(--ctp-teal);
+}
+.blog-content .hljs-attr,
+.blog-content .hljs-attribute {
+    color: var(--ctp-sky);
+}
+.blog-content .hljs-variable,
+.blog-content .hljs-template-variable {
+    color: var(--ctp-red);
+}
+.blog-content .hljs-regexp {
+    color: var(--ctp-pink);
+}
+.blog-content .hljs-symbol,
+.blog-content .hljs-bullet {
+    color: var(--ctp-flamingo);
+}
+.blog-content .hljs-meta {
+    color: var(--ctp-sapphire);
+}
+.blog-content .hljs-deletion {
+    color: var(--ctp-red);
+}
+
+.blog-content pre code.hljs {
+    display: block;
 }
