@@ -29,14 +29,14 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "fixed top-4 inset-x-4 z-50 mx-auto w-auto max-w-3xl",
+        "fixed top-4 inset-x-3 z-50 mx-auto box-border w-auto max-w-[calc(100dvw-1.5rem)] md:inset-x-4 md:max-w-3xl",
         mobileOpen ? "rounded-3xl" : "rounded-full",
         "border border-white/8 bg-background/60 backdrop-blur-2xl backdrop-saturate-150",
         "shadow-[0_8px_32px_rgba(0,0,0,0.12)] transition-shadow duration-300",
         scrolled && "shadow-[0_8px_40px_rgba(0,0,0,0.2)]",
       )}
     >
-      <nav className="flex h-14 min-w-0 items-center justify-between px-3 sm:px-4 md:px-5">
+      <nav className="flex h-14 w-full min-w-0 items-center justify-between px-3 sm:px-4 md:px-5">
         <Link href="/" className="group flex min-w-0 items-center gap-2">
           <motion.div
             whileHover={{ rotate: 10, scale: 1.08 }}

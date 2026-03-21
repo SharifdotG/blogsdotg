@@ -206,8 +206,8 @@ export default function BlogDetailClient({
     return (
       <>
         <Navbar />
-        <main className="min-h-screen">
-          <article className="container mx-auto px-4 md:px-6 pt-28 pb-8 md:pt-32 md:pb-12">
+        <main className="min-h-screen overflow-x-clip">
+          <article className="container mx-auto overflow-x-clip px-4 md:px-6 pt-28 pb-8 md:pt-32 md:pb-12">
             <Skeleton className="h-8 w-32 mb-6" />
             <div className="max-w-3xl mx-auto space-y-4">
               <div className="flex gap-2">
@@ -252,8 +252,8 @@ export default function BlogDetailClient({
   return (
     <>
       <Navbar />
-      <main className="min-h-screen">
-        <article className="container mx-auto px-4 md:px-6 pt-28 pb-8 md:pt-32 md:pb-12">
+      <main className="min-h-screen overflow-x-clip">
+        <article className="container mx-auto overflow-x-clip px-4 md:px-6 pt-28 pb-8 md:pt-32 md:pb-12">
           {/* Back button */}
           <motion.div
             initial={{ opacity: 0, x: -10 }}

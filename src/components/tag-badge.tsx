@@ -48,7 +48,7 @@ export function TagBadge({
         <Badge
             variant="secondary"
             className={cn(
-                "border-0 font-medium transition-colors cursor-pointer",
+                "max-w-full border-0 font-medium transition-colors cursor-pointer whitespace-normal wrap-break-word",
                 colorClass,
                 sizeClasses[size],
             )}
