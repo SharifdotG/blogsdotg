@@ -52,7 +52,7 @@ npm install
 cp .env.example .env.local
 ```
 
-Update `.env.local` values.
+Update `.env.local` values
 
 1) **Generate auth keys for Convex Auth**
 
